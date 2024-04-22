@@ -2,24 +2,24 @@ IMPORTANT ❗ ❗ ❗ Please remember to destroy all the resources after each wo
   
 ![img.png](doc/figures/destroy.png)
 
-1. Authors:
+1. Authors: ✅
 
-   ***enter your group nr***
+   **Group no. 1**
 
-   ***link to forked repo***
+   **The forked repo is available here: https://github.com/Dove6/tbd-workshop-1**
    
-2. Follow all steps in README.md.
+3. Follow all steps in README.md. ✅
 
-3. Select your project and set budget alerts on 5%, 25%, 50%, 80% of 50$ (in cloud console -> billing -> budget & alerts -> create buget; unclick discounts and promotions&others while creating budget).
+4. Select your project and set budget alerts on 5%, 25%, 50%, 80% of 50$ (in cloud console -> billing -> budget & alerts -> create buget; unclick discounts and promotions&others while creating budget). ✅
 
   ![img.png](doc/figures/discounts.png)
 
-5. From avaialble Github Actions select and run destroy on main branch.
+5. From avaialble Github Actions select and run destroy on main branch. ✅
    
-7. Create new git branch and:
-    1. Modify tasks-phase1.md file.
+7. Create new git branch and: 🔄
+    1. Modify tasks-phase1.md file. ✅
     
-    2. Create PR from this branch to **YOUR** master and merge it to make new release. 
+    2. Create PR from this branch to **YOUR** master and merge it to make new release. 🔄
     
     ***place the screenshot from GA after succesfull application of release***
 
