@@ -18,6 +18,7 @@ jobs:
     steps:
     - uses: 'actions/checkout@v3'
     - uses: hadolint/hadolint-action@v3.1.0
+      id: hadolint
       with:
         recursive: true
         verbose: true
