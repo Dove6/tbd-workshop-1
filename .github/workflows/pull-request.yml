@@ -17,10 +17,17 @@ jobs:
 
     steps:
     - uses: 'actions/checkout@v3'
+    - name: Move devel dir (with external Dockerfiles) temporarily out of the project root dir
+      run: |
+        mv ./devel ../
     - uses: hadolint/hadolint-action@v3.1.0
+      id: hadolint
       with:
         recursive: true
         verbose: true
+    - name: Move devel dir back to the project root dir
+      run: |
+        mv ../devel ./
     - name: Update Pull Request with hadolint
       uses: actions/github-script@v7.0.1
       if: github.event_name == 'pull_request'
