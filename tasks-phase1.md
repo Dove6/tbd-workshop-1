@@ -134,9 +134,10 @@ create a sample usage profiles and add it to the Infracost task in CI/CD pipelin
     **Why does ORC not require a table schema?**  
     There is no need to define a table schema using SQL as OCR stores its own schema definition at the end of each file. It is "a self-describing type-aware columnar file format".
   
-12. Start an interactive session from Vertex AI workbench: 🔄
+12. Start an interactive session from Vertex AI workbench: ✅
 
-    ***place the screenshot of notebook here***
+    ***The screenshot of notebook:***  
+    ![image](https://github.com/Dove6/tbd-workshop-1/assets/24943032/a384b220-5e9e-426a-a0cb-74f51ea3d5c4)
    
 13. Find and correct the error in spark-job.py 🔄
 
