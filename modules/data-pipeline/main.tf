@@ -32,7 +32,9 @@ resource "google_storage_bucket_object" "job-code" {
   for_each = toset(["spark-job.py"])
   bucket   = google_storage_bucket.tbd-code-bucket.name
   name     = each.value
-  source   = "${path.module}/resources/${each.value}"
+  content = templatefile("${path.module}/resources/${each.value}", {
+    data_bucket_name = var.data_bucket_name
+  })
 }
 
 
