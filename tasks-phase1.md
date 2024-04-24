@@ -233,9 +233,7 @@ create a sample usage profiles and add it to the Infracost task in CI/CD pipelin
         depends_on   = [google_project_service.notebooks]
         location     = local.zone
         machine_type = var.machine_type
-        .
-        .
-        .
+        # ...
     }
     ```
 
@@ -259,7 +257,7 @@ create a sample usage profiles and add it to the Infracost task in CI/CD pipelin
         region       = var.region
         network      = module.vpc.network.network_id
         subnet       = module.vpc.subnets[local.notebook_subnet_id].id
-        machine_type = "n1-standard-1"
+        machine_type = "e2-standard-4"
 
         ai_notebook_instance_owner = var.ai_notebook_instance_owner
         ## To remove before workshop
@@ -276,7 +274,7 @@ create a sample usage profiles and add it to the Infracost task in CI/CD pipelin
         project_name = var.project_name
         region       = var.region
         subnet       = module.vpc.subnets[local.notebook_subnet_id].id
-        machine_type = "n1-standard-1"
+        machine_type = "e2-standard-4"
     }       
     ```
 
@@ -286,16 +284,13 @@ create a sample usage profiles and add it to the Infracost task in CI/CD pipelin
     
     ```terraform
     resource "google_dataproc_cluster" "tbd-dataproc-cluster" {
-        .
-        .
-        .
+        # ...
         preemptible_worker_config {
           num_instances = 1
 
           disk_config {
             boot_disk_type    = "pd-standard"
             boot_disk_size_gb = 30
-            num_local_ssds    = 1
           }
           instance_flexibility_policy {
             instance_selection_list {
@@ -313,9 +308,7 @@ create a sample usage profiles and add it to the Infracost task in CI/CD pipelin
 
     ```terraform
     resource "google_notebooks_instance" "tbd_notebook" {
-        .
-        .
-        .
+        # ...
         metadata = {
             vmDnsSetting : "GlobalDefault"
             notebook-disable-root = true
@@ -347,3 +340,8 @@ create a sample usage profiles and add it to the Infracost task in CI/CD pipelin
         }
     }
     ```
+
+    The WebUI can be accessed through a link in the "Web interfaces" tab of the Dataproc cluster on GCP console:  
+    ![2024-04-24_22-35-14_jdqhWa](https://github.com/Dove6/tbd-workshop-1/assets/24943032/1ed12cdf-9523-4992-b6f0-05e14f6f1e99)  
+    Result:  
+    ![chrome_2024-04-24_22-31-27_LBSYcD](https://github.com/Dove6/tbd-workshop-1/assets/24943032/47380183-6821-43bf-9b26-408ff7e44a92)

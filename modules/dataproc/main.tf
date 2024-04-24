@@ -19,6 +19,7 @@ resource "google_dataproc_cluster" "tbd-dataproc-cluster" {
       image_version = var.image_version
     }
     gce_cluster_config {
+      zone             = "europe-west1-b"
       subnetwork       = var.subnet
       internal_ip_only = true
       metadata = {
@@ -55,7 +56,6 @@ resource "google_dataproc_cluster" "tbd-dataproc-cluster" {
       disk_config {
         boot_disk_type    = "pd-standard"
         boot_disk_size_gb = 30
-        num_local_ssds    = 1
       }
       instance_flexibility_policy {
         instance_selection_list {

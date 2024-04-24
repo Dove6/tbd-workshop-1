@@ -49,7 +49,7 @@ module "vertex_ai_workbench" {
   region       = var.region
   network      = module.vpc.network.network_id
   subnet       = module.vpc.subnets[local.notebook_subnet_id].id
-  machine_type = "n1-standard-1"
+  machine_type = "e2-standard-4"
 
   ai_notebook_instance_owner = var.ai_notebook_instance_owner
   ## To remove before workshop
@@ -66,7 +66,7 @@ module "dataproc" {
   project_name = var.project_name
   region       = var.region
   subnet       = module.vpc.subnets[local.notebook_subnet_id].id
-  machine_type = "n1-standard-1"
+  machine_type = "e2-standard-4"
 }
 
 ## Uncomment for Dataproc batches (serverless)
