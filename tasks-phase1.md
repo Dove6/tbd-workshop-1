@@ -220,7 +220,7 @@ create a sample usage profiles and add it to the Infracost task in CI/CD pipelin
     A detailed stacktrace was present in the output of each job:  
     ![image](https://github.com/Dove6/tbd-workshop-1/assets/24943032/51f00771-146a-4548-96d8-c027915c742a)
 
-14. Additional tasks using Terraform: 🔄
+14. Additional tasks using Terraform: ✅
 
     1. Add support for arbitrary machine types and worker nodes for a Dataproc cluster and JupyterLab instance ✅
 
@@ -327,6 +327,25 @@ create a sample usage profiles and add it to the Infracost task in CI/CD pipelin
     }
     ```
 
-    4. (Optional) Get access to Apache Spark WebUI 🔄
+    4. (Optional) Get access to Apache Spark WebUI ✅
 
-    ***place the link to the modified file and inserted terraform code***
+    [dataproc/main.tf](https://github.com/Dove6/tbd-workshop-1/blob/master/modules/dataproc/main.tf)
+
+    ```terraform
+    resource "google_dataproc_cluster" "tbd-dataproc-cluster" {
+        #checkov:skip=CKV_GCP_91: "Ensure Dataproc cluster is encrypted with Customer Supplied Encryption Keys (CSEK)"
+        depends_on = [google_project_service.dataproc]
+        name       = "tbd-cluster"
+        project    = var.project_name
+        region     = var.region
+
+        cluster_config {
+          endpoint_config {
+            enable_http_port_access = "true"
+          }
+          .
+          .
+          .
+        }
+    }
+    ```
