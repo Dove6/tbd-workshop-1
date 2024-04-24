@@ -220,20 +220,171 @@ create a sample usage profiles and add it to the Infracost task in CI/CD pipelin
     A detailed stacktrace was present in the output of each job:  
     ![image](https://github.com/Dove6/tbd-workshop-1/assets/24943032/51f00771-146a-4548-96d8-c027915c742a)
 
-14. Additional tasks using Terraform: 🔄
+14. Additional tasks using Terraform: ✅
 
-    1. Add support for arbitrary machine types and worker nodes for a Dataproc cluster and JupyterLab instance 🔄
+    1. Add support for arbitrary machine types and worker nodes for a Dataproc cluster and JupyterLab instance ✅
 
-    ***place the link to the modified file and inserted terraform code***
+    [vertex-ai-workbench/main.tf](https://github.com/Dove6/tbd-workshop-1/blob/master/modules/vertex-ai-workbench/main.tf)
+
+    ```terraform
+    resource "google_notebooks_instance" "tbd_notebook" {
+        #checkov:skip=CKV2_GCP_18: "Ensure GCP network defines a firewall and does not use the default firewall"
+        #checkov:skip=CKV2_GCP_21: "Ensure Vertex AI instance disks are encrypted with a Customer Managed Key (CMK)"
+        depends_on   = [google_project_service.notebooks]
+        location     = local.zone
+        machine_type = var.machine_type
+        # ...
+    }
+    ```
+
+    [vertex-ai-workbench/variables.tf](https://github.com/Dove6/tbd-workshop-1/blob/master/modules/vertex-ai-workbench/variables.tf)
+
+    ```terraform
+    variable "machine_type" {
+        type        = string
+        default     = "e2-medium"
+        description = "Machine type to use for both worker and master nodes"
+    }
+    ```
+
+    [dataproc/main.tf](https://github.com/Dove6/tbd-workshop-1/blob/master/modules/dataproc/main.tf)
+
+    ```terraform
+    resource "google_dataproc_cluster" "tbd-dataproc-cluster" {
+        # ...
+        master_config {
+          num_instances = 1
+          machine_type  = var.master_machine_type
+          disk_config {
+            boot_disk_type    = "pd-standard"
+            boot_disk_size_gb = 100
+          }
+        }
+
+        worker_config {
+          num_instances = 2
+          machine_type  = var.worker_machine_type
+          disk_config {
+            boot_disk_type    = "pd-standard"
+            boot_disk_size_gb = 100
+          }
+        }
+        # ...
+    }
+    ```
+
+    [dataproc/variables.tf](https://github.com/Dove6/tbd-workshop-1/blob/master/modules/dataproc/variables.tf)
+
+    ```terraform
+    variable "master_machine_type" {
+        type        = string
+        default     = "e2-medium"
+        description = "Machine type to use for master nodes"
+    }
+
+    variable "worker_machine_type" {
+        type        = string
+        default     = "e2-medium"
+        description = "Machine type to use for worker nodes"
+    }
+    ```
+
+    [main.tf](https://github.com/Dove6/tbd-workshop-1/blob/master/main.tf)
     
-    3. Add support for preemptible/spot instances in a Dataproc cluster 🔄
+    ```terraform
+    module "vertex_ai_workbench" {
+        depends_on   = [module.jupyter_docker_image, module.vpc]
+        source       = "./modules/vertex-ai-workbench"
+        project_name = var.project_name
+        region       = var.region
+        network      = module.vpc.network.network_id
+        subnet       = module.vpc.subnets[local.notebook_subnet_id].id
+        machine_type = "e2-standard-4"
 
-    ***place the link to the modified file and inserted terraform code***
+        ai_notebook_instance_owner = var.ai_notebook_instance_owner
+        ## To remove before workshop
+        # FIXME:remove
+        ai_notebook_image_repository = element(split(":", module.jupyter_docker_image.jupyter_image_name), 0)
+        ai_notebook_image_tag        = element(split(":", module.jupyter_docker_image.jupyter_image_name), 1)
+        ## To remove before workshop
+    }
+
+    #
+    module "dataproc" {
+        depends_on          = [module.vpc]
+        source              = "./modules/dataproc"
+        project_name        = var.project_name
+        region              = var.region
+        subnet              = module.vpc.subnets[local.notebook_subnet_id].id
+        master_machine_type = "e2-standard-4"
+        worker_machine_type = "e2-standard-4"
+    }    
+    ```
+
+    2. Add support for preemptible/spot instances in a Dataproc cluster ✅
+
+    [dataproc/main.tf](https://github.com/Dove6/tbd-workshop-1/blob/master/modules/dataproc/main.tf)
     
-    3. Perform additional hardening of Jupyterlab environment, i.e. disable sudo access and enable secure boot 🔄
+    ```terraform
+    resource "google_dataproc_cluster" "tbd-dataproc-cluster" {
+        # ...
+        preemptible_worker_config {
+          num_instances = 1
+
+          disk_config {
+            boot_disk_type    = "pd-standard"
+            boot_disk_size_gb = 30
+          }
+          instance_flexibility_policy {
+            instance_selection_list {
+              machine_types = ["e2-standard-2"]
+              rank          = 1
+            }
+          }
+        }
+    }
+    ```
+
+    3. Perform additional hardening of Jupyterlab environment, i.e. disable sudo access and enable secure boot ✅
     
-    ***place the link to the modified file and inserted terraform code***
+    [vertex-ai-workbench/main.tf](https://github.com/Dove6/tbd-workshop-1/blob/master/modules/vertex-ai-workbench/main.tf)
 
-    4. (Optional) Get access to Apache Spark WebUI
+    ```terraform
+    resource "google_notebooks_instance" "tbd_notebook" {
+        # ...
+        metadata = {
+            vmDnsSetting : "GlobalDefault"
+            notebook-disable-root = true
+        }
+        shielded_instance_config {
+            enable_secure_boot = true
+        }
+        post_startup_script = "gs://${google_storage_bucket_object.post-startup.bucket}/${google_storage_bucket_object.post-startup.name}"
+    }
+    ```
 
-    ***place the link to the modified file and inserted terraform code***
+    4. (Optional) Get access to Apache Spark WebUI ✅
+
+    [dataproc/main.tf](https://github.com/Dove6/tbd-workshop-1/blob/master/modules/dataproc/main.tf)
+
+    ```terraform
+    resource "google_dataproc_cluster" "tbd-dataproc-cluster" {
+        #checkov:skip=CKV_GCP_91: "Ensure Dataproc cluster is encrypted with Customer Supplied Encryption Keys (CSEK)"
+        depends_on = [google_project_service.dataproc]
+        name       = "tbd-cluster"
+        project    = var.project_name
+        region     = var.region
+
+        cluster_config {
+          endpoint_config {
+            enable_http_port_access = "true"
+          }
+          # ...
+        }
+    }
+    ```
+
+    The WebUI can be accessed through the "Spark History Server" link in the "Web interfaces" tab of the Dataproc cluster on GCP console:  
+    ![2024-04-24_22-35-14_jdqhWa](https://github.com/Dove6/tbd-workshop-1/assets/24943032/1ed12cdf-9523-4992-b6f0-05e14f6f1e99)  
+    Result:  
+    ![chrome_2024-04-24_22-31-27_LBSYcD](https://github.com/Dove6/tbd-workshop-1/assets/24943032/47380183-6821-43bf-9b26-408ff7e44a92)
