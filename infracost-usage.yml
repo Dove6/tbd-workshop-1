@@ -1,0 +1,55 @@
+# `infracost breakdown --usage-file infracost-usage.yml [other flags]`
+version: 0.1
+resource_usage:
+  module.gcr.google_artifact_registry_repository.registry:
+    storage_gb: 150                  # Total data stored in the repository in GB
+
+  google_service_networking_connection.private_vpc_connection:
+    monthly_egress_data_transfer_gb: # Monthly VM-VM data transfer from VPN gateway to the following, in GB:
+      same_region: 250
+      europe: 70
+      worldwide: 200
+
+  module.data-pipelines.google_storage_bucket.tbd-code-bucket:
+    storage_gb: 50                    # Total size of bucket in GB.
+    monthly_class_a_operations: 10000 # Monthly number of class A operations (object adds, bucket/object list).
+    monthly_class_b_operations: 20000 # Monthly number of class B operations (object gets, retrieve bucket/object metadata).
+    monthly_egress_data_transfer_gb:  # Monthly data transfer from Cloud Storage to the following, in GB:
+      same_continent: 150
+      worldwide: 50
+      asia: 1
+      china: 1
+      australia: 1
+
+  module.data-pipelines.google_storage_bucket.tbd-data-bucket:
+    storage_gb: 150                   # Total size of bucket in GB.
+    monthly_class_a_operations: 40000 # Monthly number of class A operations (object adds, bucket/object list).
+    monthly_class_b_operations: 20000 # Monthly number of class B operations (object gets, retrieve bucket/object metadata).
+    monthly_egress_data_transfer_gb:  # Monthly data transfer from Cloud Storage to the following, in GB:
+      same_continent: 450
+      worldwide: 150
+      asia: 1
+      china: 1
+      australia: 1
+
+  google_storage_bucket.tbd-state-bucket:
+    storage_gb: 25                    # Total size of bucket in GB.
+    monthly_class_a_operations: 20000 # Monthly number of class A operations (object adds, bucket/object list).
+    monthly_class_b_operations: 40000 # Monthly number of class B operations (object gets, retrieve bucket/object metadata).
+    monthly_egress_data_transfer_gb:  # Monthly data transfer from Cloud Storage to the following, in GB:
+      same_continent: 75
+      worldwide: 25
+      asia: 1
+      china: 1
+      australia: 1
+
+  module.vertex_ai_workbench.google_storage_bucket.notebook-conf-bucket:
+    storage_gb: 50                    # Total size of bucket in GB.
+    monthly_class_a_operations: 20000 # Monthly number of class A operations (object adds, bucket/object list).
+    monthly_class_b_operations: 10000 # Monthly number of class B operations (object gets, retrieve bucket/object metadata).
+    monthly_egress_data_transfer_gb:  # Monthly data transfer from Cloud Storage to the following, in GB:
+      same_continent: 150
+      worldwide: 50
+      asia: 1
+      china: 1
+      australia: 1

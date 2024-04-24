@@ -53,13 +53,68 @@ IMPORTANT ❗ ❗ ❗ Please remember to destroy all the resources after each wo
   
     ***place your diagram here***
 
-11. Create a new PR and add costs by entering the expected consumption into Infracost 🔄
+11. Create a new PR and add costs by entering the expected consumption into Infracost ✅  
 For all the resources of type: `google_artifact_registry`, `google_storage_bucket`, `google_service_networking_connection`
-create a sample usage profiles and add it to the Infracost task in CI/CD pipeline. Usage file [example](https://github.com/infracost/infracost/blob/master/infracost-usage-example.yml) 
+create a sample usage profiles and add it to the Infracost task in CI/CD pipeline. Usage file [example](https://github.com/infracost/infracost/blob/master/infracost-usage-example.yml)
 
-   ***place the expected consumption you entered here***
+    <details>
+    <summary><b>The expected consumption entered:</b></summary>
 
-   ***place the screenshot from infracost output here***
+    ```yml
+    resource_usage:
+    module.gcr.google_artifact_registry_repository.registry:
+        storage_gb: 150                  # Total data stored in the repository in GB
+
+    google_service_networking_connection.private_vpc_connection:
+        monthly_egress_data_transfer_gb: # Monthly VM-VM data transfer from VPN gateway to the following, in GB:
+        same_region: 250
+        europe: 70
+        worldwide: 200
+
+    module.data-pipelines.google_storage_bucket.tbd-code-bucket:
+        storage_gb: 50                    # Total size of bucket in GB.
+        monthly_class_a_operations: 10000 # Monthly number of class A operations (object adds, bucket/object list).
+        monthly_class_b_operations: 20000 # Monthly number of class B operations (object gets, retrieve bucket/object metadata).
+        monthly_egress_data_transfer_gb:  # Monthly data transfer from Cloud Storage to the following, in GB:
+        same_continent: 150
+        worldwide: 50
+        asia: 1
+        china: 1
+        australia: 1
+
+    module.data-pipelines.google_storage_bucket.tbd-data-bucket:
+        storage_gb: 150                   # Total size of bucket in GB.
+        monthly_class_a_operations: 40000 # Monthly number of class A operations (object adds, bucket/object list).
+        monthly_class_b_operations: 20000 # Monthly number of class B operations (object gets, retrieve bucket/object metadata).
+        monthly_egress_data_transfer_gb:  # Monthly data transfer from Cloud Storage to the following, in GB:
+        same_continent: 450
+        worldwide: 150
+        asia: 1
+        china: 1
+        australia: 1
+
+    google_storage_bucket.tbd-state-bucket:
+        storage_gb: 25                    # Total size of bucket in GB.
+        monthly_class_a_operations: 20000 # Monthly number of class A operations (object adds, bucket/object list).
+        monthly_class_b_operations: 40000 # Monthly number of class B operations (object gets, retrieve bucket/object metadata).
+        monthly_egress_data_transfer_gb:  # Monthly data transfer from Cloud Storage to the following, in GB:
+        same_continent: 75
+        worldwide: 25
+        asia: 1
+        china: 1
+        australia: 1
+
+    module.vertex_ai_workbench.google_storage_bucket.notebook-conf-bucket:
+        storage_gb: 50                    # Total size of bucket in GB.
+        monthly_class_a_operations: 20000 # Monthly number of class A operations (object adds, bucket/object list).
+        monthly_class_b_operations: 10000 # Monthly number of class B operations (object gets, retrieve bucket/object metadata).
+        monthly_egress_data_transfer_gb:  # Monthly data transfer from Cloud Storage to the following, in GB:
+    ```
+    </details>
+
+    **The screenshots of `infracost` output:**  
+    ![image](https://github.com/Dove6/tbd-workshop-1/assets/24943032/c8b8b8e0-f7d7-4d04-a467-f088d5e65f57)  
+    ![image](https://github.com/Dove6/tbd-workshop-1/assets/24943032/61c80390-d4bc-41c3-8725-1ebf63ceb390)
 
 11. Create a BigQuery dataset and an external table using SQL 🔄
     
