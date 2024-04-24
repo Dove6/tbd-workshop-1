@@ -222,18 +222,111 @@ create a sample usage profiles and add it to the Infracost task in CI/CD pipelin
 
 14. Additional tasks using Terraform: 🔄
 
-    1. Add support for arbitrary machine types and worker nodes for a Dataproc cluster and JupyterLab instance 🔄
+    1. Add support for arbitrary machine types and worker nodes for a Dataproc cluster and JupyterLab instance ✅
 
-    ***place the link to the modified file and inserted terraform code***
-    
-    3. Add support for preemptible/spot instances in a Dataproc cluster 🔄
+    [vertex-ai-workbench/main.tf](https://github.com/Dove6/tbd-workshop-1/blob/master/modules/vertex-ai-workbench/main.tf)
 
-    ***place the link to the modified file and inserted terraform code***
-    
-    3. Perform additional hardening of Jupyterlab environment, i.e. disable sudo access and enable secure boot 🔄
-    
-    ***place the link to the modified file and inserted terraform code***
+    ```terraform
+    resource "google_notebooks_instance" "tbd_notebook" {
+        #checkov:skip=CKV2_GCP_18: "Ensure GCP network defines a firewall and does not use the default firewall"
+        #checkov:skip=CKV2_GCP_21: "Ensure Vertex AI instance disks are encrypted with a Customer Managed Key (CMK)"
+        depends_on   = [google_project_service.notebooks]
+        location     = local.zone
+        machine_type = var.machine_type
+        .
+        .
+        .
+    }
+    ```
 
-    4. (Optional) Get access to Apache Spark WebUI
+    [vertex-ai-workbench/variables.tf](https://github.com/Dove6/tbd-workshop-1/blob/master/modules/vertex-ai-workbench/variables.tf)
+
+    ```terraform
+    variable "machine_type" {
+        type        = string
+        default     = "e2-medium"
+        description = "Machine type to use for both worker and master nodes"
+    }
+    ```
+
+    [main.tf](https://github.com/Dove6/tbd-workshop-1/blob/master/main.tf)
+    
+    ```terraform
+    module "vertex_ai_workbench" {
+        depends_on   = [module.jupyter_docker_image, module.vpc]
+        source       = "./modules/vertex-ai-workbench"
+        project_name = var.project_name
+        region       = var.region
+        network      = module.vpc.network.network_id
+        subnet       = module.vpc.subnets[local.notebook_subnet_id].id
+        machine_type = "n1-standard-1"
+
+        ai_notebook_instance_owner = var.ai_notebook_instance_owner
+        ## To remove before workshop
+        # FIXME:remove
+        ai_notebook_image_repository = element(split(":", module.jupyter_docker_image.jupyter_image_name), 0)
+        ai_notebook_image_tag        = element(split(":", module.jupyter_docker_image.jupyter_image_name), 1)
+        ## To remove before workshop
+    }
+
+    #
+    module "dataproc" {
+        depends_on   = [module.vpc]
+        source       = "./modules/dataproc"
+        project_name = var.project_name
+        region       = var.region
+        subnet       = module.vpc.subnets[local.notebook_subnet_id].id
+        machine_type = "n1-standard-1"
+    }       
+    ```
+
+    2. Add support for preemptible/spot instances in a Dataproc cluster ✅
+
+    [dataproc/main.tf](https://github.com/Dove6/tbd-workshop-1/blob/master/modules/dataproc/main.tf)
+    
+    ```terraform
+    resource "google_dataproc_cluster" "tbd-dataproc-cluster" {
+        .
+        .
+        .
+        preemptible_worker_config {
+          num_instances = 1
+
+          disk_config {
+            boot_disk_type    = "pd-standard"
+            boot_disk_size_gb = 30
+            num_local_ssds    = 1
+          }
+          instance_flexibility_policy {
+            instance_selection_list {
+              machine_types = ["e2-standard-2"]
+              rank          = 1
+            }
+          }
+        }
+    }
+    ```
+
+    3. Perform additional hardening of Jupyterlab environment, i.e. disable sudo access and enable secure boot ✅
+    
+    [vertex-ai-workbench/main.tf](https://github.com/Dove6/tbd-workshop-1/blob/master/modules/vertex-ai-workbench/main.tf)
+
+    ```terraform
+    resource "google_notebooks_instance" "tbd_notebook" {
+        .
+        .
+        .
+        metadata = {
+            vmDnsSetting : "GlobalDefault"
+            notebook-disable-root = true
+        }
+        shielded_instance_config {
+            enable_secure_boot = true
+        }
+        post_startup_script = "gs://${google_storage_bucket_object.post-startup.bucket}/${google_storage_bucket_object.post-startup.name}"
+    }
+    ```
+
+    4. (Optional) Get access to Apache Spark WebUI 🔄
 
     ***place the link to the modified file and inserted terraform code***
