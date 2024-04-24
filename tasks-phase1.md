@@ -36,7 +36,7 @@ IMPORTANT ❗ ❗ ❗ Please remember to destroy all the resources after each wo
    gcloud compute --project "tbd-2024l-304108" ssh --zone "europe-west1-b" "tbd-cluster-m" -- -L 8088:localhost:8088
    ```
 
-   ***The port: 8088*** (according to [Google](https://cloud.google.com/dataproc/docs/concepts/accessing/cluster-web-interfaces#available_interfaces_)
+   ***The port: 8088*** (according to [Google](https://cloud.google.com/dataproc/docs/concepts/accessing/cluster-web-interfaces#available_interfaces_))
 
    ***The screenshot of YARN UI:***  
    ![image](https://github.com/Dove6/tbd-workshop-1/assets/24943032/27dda782-ece0-411a-96c4-6b3b5fe8e867)
@@ -45,7 +45,7 @@ IMPORTANT ❗ ❗ ❗ Please remember to destroy all the resources after each wo
    UI of particular applications can be accessed after additionally tunneling port 18080 (`-L 18080:localhost:18080`) and putting the following entry in the `hosts` file:  
    `127.0.0.1 tbd-cluster-m.c.tbd-2024l-304108.internal. tbd-cluster-m`
    
-11. Draw an architecture diagram (e.g. in draw.io) that includes: 🔄
+10. Draw an architecture diagram (e.g. in draw.io) that includes: 🔄
     1. VPC topology with service assignment to subnets 🔄
     2. Description of the components of service accounts 🔄
     3. List of buckets for disposal 🔄
@@ -53,7 +53,7 @@ IMPORTANT ❗ ❗ ❗ Please remember to destroy all the resources after each wo
   
     ***place your diagram here***
 
-12. Create a new PR and add costs by entering the expected consumption into Infracost 🔄
+11. Create a new PR and add costs by entering the expected consumption into Infracost 🔄
 For all the resources of type: `google_artifact_registry`, `google_storage_bucket`, `google_service_networking_connection`
 create a sample usage profiles and add it to the Infracost task in CI/CD pipeline. Usage file [example](https://github.com/infracost/infracost/blob/master/infracost-usage-example.yml) 
 
