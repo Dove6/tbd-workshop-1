@@ -34,18 +34,18 @@ IMPORTANT ❗ ❗ ❗ Please remember to destroy all the resources after each wo
     This service is responsible for storing Docker image artifacts.
     Module inputs:
     - `project_name` - the name of the project this registry is for,
-    - `region` - the region where registry is created, defaults to `EU`.
+    - `region` - the region where registry is created, may be `ASIA`, `EU` (default) or `US`.
     Module outputs:
     - `registry_hostname` - the registry address for other services.
-    The module is a light wrapper around `google_artifact_registry_repository`, which is a very generic artifact repository.
-    It can store different things such as `Docker` images, `Python` libraries, `apt` applications, etc..
-    In out case it's specialized for storing only `Docker` images.
+    The module is a thin wrapper around [`google_artifact_registry_repository`](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/artifact_registry_repository), which is a very generic artifact repository.
+    It can store different things such as `Docker` images, `Python` libraries, `apt` applications, etc.
+    In our case it's specialized for storing only `Docker` images.
 
     `gcr` communicates with 2 other modules:
     - `dbt_docker_image`,
     - `jupyter_docker_image`.
     Both build a new image every time their respective source code changes and store a link to it, which can be retrieved by other services.
-    The later, `jupyter_docker_image` is later used by `vertex-ai-workbench`.
+    The latter (`jupyter_docker_image`) is later used by `vertex-ai-workbench`.
 
     **Rendered graph:**
 
