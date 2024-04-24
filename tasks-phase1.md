@@ -247,6 +247,48 @@ create a sample usage profiles and add it to the Infracost task in CI/CD pipelin
     }
     ```
 
+    [dataproc/main.tf](https://github.com/Dove6/tbd-workshop-1/blob/master/modules/dataproc/main.tf)
+
+    ```terraform
+    resource "google_dataproc_cluster" "tbd-dataproc-cluster" {
+        # ...
+        master_config {
+          num_instances = 1
+          machine_type  = var.master_machine_type
+          disk_config {
+            boot_disk_type    = "pd-standard"
+            boot_disk_size_gb = 100
+          }
+        }
+
+        worker_config {
+          num_instances = 2
+          machine_type  = var.worker_machine_type
+          disk_config {
+            boot_disk_type    = "pd-standard"
+            boot_disk_size_gb = 100
+          }
+        }
+        # ...
+    }
+    ```
+
+    [dataproc/variables.tf](https://github.com/Dove6/tbd-workshop-1/blob/master/modules/dataproc/variables.tf)
+
+    ```terraform
+    variable "master_machine_type" {
+        type        = string
+        default     = "e2-medium"
+        description = "Machine type to use for master nodes"
+    }
+
+    variable "worker_machine_type" {
+        type        = string
+        default     = "e2-medium"
+        description = "Machine type to use for worker nodes"
+    }
+    ```
+
     [main.tf](https://github.com/Dove6/tbd-workshop-1/blob/master/main.tf)
     
     ```terraform
@@ -269,13 +311,14 @@ create a sample usage profiles and add it to the Infracost task in CI/CD pipelin
 
     #
     module "dataproc" {
-        depends_on   = [module.vpc]
-        source       = "./modules/dataproc"
-        project_name = var.project_name
-        region       = var.region
-        subnet       = module.vpc.subnets[local.notebook_subnet_id].id
-        machine_type = "e2-standard-4"
-    }       
+        depends_on          = [module.vpc]
+        source              = "./modules/dataproc"
+        project_name        = var.project_name
+        region              = var.region
+        subnet              = module.vpc.subnets[local.notebook_subnet_id].id
+        master_machine_type = "e2-standard-4"
+        worker_machine_type = "e2-standard-4"
+    }    
     ```
 
     2. Add support for preemptible/spot instances in a Dataproc cluster ✅
