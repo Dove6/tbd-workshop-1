@@ -343,9 +343,7 @@ create a sample usage profiles and add it to the Infracost task in CI/CD pipelin
           endpoint_config {
             enable_http_port_access = "true"
           }
-          .
-          .
-          .
+          # ...
         }
     }
     ```
