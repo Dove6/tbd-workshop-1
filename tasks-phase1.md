@@ -384,7 +384,7 @@ create a sample usage profiles and add it to the Infracost task in CI/CD pipelin
     }
     ```
 
-    The WebUI can be accessed through a link in the "Web interfaces" tab of the Dataproc cluster on GCP console:  
+    The WebUI can be accessed through the "Spark History Server" link in the "Web interfaces" tab of the Dataproc cluster on GCP console:  
     ![2024-04-24_22-35-14_jdqhWa](https://github.com/Dove6/tbd-workshop-1/assets/24943032/1ed12cdf-9523-4992-b6f0-05e14f6f1e99)  
     Result:  
     ![chrome_2024-04-24_22-31-27_LBSYcD](https://github.com/Dove6/tbd-workshop-1/assets/24943032/47380183-6821-43bf-9b26-408ff7e44a92)
