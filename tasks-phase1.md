@@ -45,13 +45,29 @@ IMPORTANT ❗ ❗ ❗ Please remember to destroy all the resources after each wo
    UI of particular applications can be accessed after additionally tunneling port 18080 (`-L 18080:localhost:18080`) and putting the following entry in the `hosts` file:  
    `127.0.0.1 tbd-cluster-m.c.tbd-2024l-304108.internal. tbd-cluster-m`
    
-10. Draw an architecture diagram (e.g. in draw.io) that includes: 🔄
-    1. VPC topology with service assignment to subnets 🔄
-    2. Description of the components of service accounts 🔄
-    3. List of buckets for disposal 🔄
-    4. Description of network communication (ports, why it is necessary to specify the host for the driver) of Apache Spark running from Vertex AI Workbech 🔄
-  
-    ***place your diagram here***
+10. Draw an architecture diagram (e.g. in draw.io) that includes: ✅
+    1. VPC topology with service assignment to subnets ✅
+
+    ![network](https://github.com/Dove6/tbd-workshop-1/assets/13040204/158bbfba-9de0-425d-8451-9eb0b38ffef5)
+
+    ![firewall](https://github.com/Dove6/tbd-workshop-1/assets/13040204/508803b6-28f1-43a2-bbc9-230c6ba637a3)
+
+    2. Description of the components of service accounts ✅
+
+    ![accounts](https://github.com/Dove6/tbd-workshop-1/assets/13040204/cd08455c-3247-4943-bfdb-85d14e98f101)
+
+    3. List of buckets for disposal ✅
+
+    ![buckets](https://github.com/Dove6/tbd-workshop-1/assets/13040204/2da1026b-67ac-446b-97f5-6688cc6bb214)
+
+    4. Description of network communication (ports, why it is necessary to specify the host for the driver) of Apache Spark running from Vertex AI Workbech ✅
+
+    The host for the Apache Driver is necessary because it's the command center of Apache Spark application and all other parts of the architecture need to communicate with it.
+    The driver address is `10.11.0.3:30000`, which belongs to the previously mentioned `composer_subnet`.
+    [The address is currently hardcoded](https://github.com/mwiewior/tbd-tpc-di/blob/892927064ab9246340f8b22910081372cd2520b9/profiles.yml#L15).
+    The block manager port is `30001`.
+    The same ports are statically assigned to the host node using a Kubernetes `NodePort`.
+    Apache Spark Web UI is available at port `18080`.
 
 11. Create a new PR and add costs by entering the expected consumption into Infracost ✅  
 For all the resources of type: `google_artifact_registry`, `google_storage_bucket`, `google_service_networking_connection`
