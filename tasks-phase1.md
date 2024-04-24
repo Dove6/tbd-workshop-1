@@ -139,9 +139,23 @@ create a sample usage profiles and add it to the Infracost task in CI/CD pipelin
     ***The screenshot of notebook:***  
     ![image](https://github.com/Dove6/tbd-workshop-1/assets/24943032/a384b220-5e9e-426a-a0cb-74f51ea3d5c4)
    
-13. Find and correct the error in spark-job.py 🔄
+13. Find and correct the error in spark-job.py ✅
 
-    ***describe the cause and how to find the error***
+    Modified files:
+    - [modules/data-pipeline/resources/spark-job.py](https://github.com/Dove6/tbd-workshop-1/pull/13/files#diff-8bc902d147d96130dd3c0f57b09f9e9cc2e431438a9f6f85189ed998752d6b3e),
+    - [modules/data-pipeline/main.tf](https://github.com/Dove6/tbd-workshop-1/pull/13/files#diff-44c683c0db0603206df91e5810276d8a4e641908e3659f4084270b73e331d0d1).
+
+    The error was located in line 21 of the file. The URL of data bucket had been hardcoded, so it wouldn't work when the script is executed as a part of another project. The issue has been fixed by referencing the variable containing the current name of data bucket:  
+    ```diff
+    - DATA_BUCKET = "gs://tbd-2024l-9910-data/data/shakespeare/"
+    + DATA_BUCKET = "gs://${data_bucket_name}/data/shakespeare/"
+    ```  
+    and filling it in using `templatefile` Terraform function.
+
+    The error was reported by Dataproc. Information about the error could be found in the "Status" column in the Jobs view in Dataproc GCP module:  
+    ![image](https://github.com/Dove6/tbd-workshop-1/assets/24943032/2b4fe322-b51d-4c60-a394-b860f3d54293)  
+    A detailed stacktrace was present in the output of each job:  
+    ![image](https://github.com/Dove6/tbd-workshop-1/assets/24943032/51f00771-146a-4548-96d8-c027915c742a)
 
 14. Additional tasks using Terraform: 🔄
 
