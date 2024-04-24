@@ -116,12 +116,23 @@ create a sample usage profiles and add it to the Infracost task in CI/CD pipelin
     ![image](https://github.com/Dove6/tbd-workshop-1/assets/24943032/c8b8b8e0-f7d7-4d04-a467-f088d5e65f57)  
     ![image](https://github.com/Dove6/tbd-workshop-1/assets/24943032/61c80390-d4bc-41c3-8725-1ebf63ceb390)
 
-11. Create a BigQuery dataset and an external table using SQL 🔄
+11. Create a BigQuery dataset and an external table using SQL ✅
     
-    ***place the code and output here***
-   
-    ***why does ORC not require a table schema?***
+    **The code (based on README.md):**
+    ```sql
+    CREATE SCHEMA IF NOT EXISTS demo OPTIONS(location = 'europe-west1');
+    CREATE OR REPLACE EXTERNAL TABLE demo.shakespeare
+      OPTIONS (
+      format = 'ORC',
+      uris = ['gs://tbd-2024l-304108-data/data/shakespeare/*.orc']);
+    SELECT * FROM demo.shakespeare ORDER BY sum_word_count DESC LIMIT 5;
+    ```
 
+    **Obtained output:**
+    ![image](https://github.com/Dove6/tbd-workshop-1/assets/24943032/66abbd72-f6c0-4fc5-a31d-717a13a9573a)
+   
+    **Why does ORC not require a table schema?**  
+    There is no need to define a table schema using SQL as OCR stores its own schema definition at the end of each file. It is "a self-describing type-aware columnar file format".
   
 12. Start an interactive session from Vertex AI workbench: 🔄
 
