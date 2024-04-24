@@ -25,9 +25,72 @@ IMPORTANT ❗ ❗ ❗ Please remember to destroy all the resources after each wo
 
        ![image](https://github.com/Dove6/tbd-workshop-1/assets/24943032/2b30ab02-2458-44f1-b706-8b55daa83508)
 
-8. Analyze terraform code. Play with terraform plan, terraform graph to investigate different modules. 🔄
+8. Analyze terraform code. Play with terraform plan, terraform graph to investigate different modules. ✅
 
-    ***describe one selected module and put the output of terraform graph for this module here***
+    **Module:** `gcr` - Google Container Registry
+
+    **Description:**
+
+    This service is responsible for storing Docker image artifacts.
+    Module inputs:
+    - `project_name` - the name of the project this registry is for,
+    - `region` - the region where registry is created, defaults to `EU`.
+    Module outputs:
+    - `registry_hostname` - the registry address for other services.
+    The module is a light wrapper around `google_artifact_registry_repository`, which is a very generic artifact repository.
+    It can store different things such as `Docker` images, `Python` libraries, `apt` applications, etc..
+    In out case it's specialized for storing only `Docker` images.
+
+    `gcr` communicates with 2 other modules:
+    - `dbt_docker_image`,
+    - `jupyter_docker_image`.
+    Both build a new image every time their respective source code changes and store a link to it, which can be retrieved by other services.
+    The later, `jupyter_docker_image` is later used by `vertex-ai-workbench`.
+
+    **Rendered graph:**
+
+    ![graphviz](https://github.com/Dove6/tbd-workshop-1/assets/13040204/24fd0d60-829f-4549-833e-843e6b6112be)
+
+    **Raw graph:**
+
+    Extracted using
+    ```
+    terraform plan -var-file env/project.tfvars -target "module.gcr" -out "plan.tfplan"
+    terraform graph -plan "plan.tfplan"
+    ```
+
+    ```
+    digraph {
+        compound = "true"
+        newrank = "true"
+        subgraph "root" {
+                "[root] module.gcr.google_artifact_registry_repository.registry" [label = "module.gcr.google_artifact_registry_repository.registry", shape = "box"]
+                "[root] module.gcr.google_artifact_registry_repository.registry (expand)" [label = "module.gcr.google_artifact_registry_repository.registry", shape = "box"]
+                "[root] module.gcr.google_project_service.api (expand)" [label = "module.gcr.google_project_service.api", shape = "box"]
+                "[root] module.gcr.google_project_service.api[\"artifactregistry.googleapis.com\"]" [label = "module.gcr.google_project_service.api", shape = "box"]
+                "[root] provider[\"registry.terraform.io/hashicorp/google\"]" [label = "provider[\"registry.terraform.io/hashicorp/google\"]", shape = "diamond"]
+                "[root] var.project_name" [label = "var.project_name", shape = "note"]
+                "[root] var.region" [label = "var.region", shape = "note"]
+                "[root] module.gcr.google_artifact_registry_repository.registry (expand)" -> "[root] module.gcr (expand)"
+                "[root] module.gcr.google_artifact_registry_repository.registry (expand)" -> "[root] provider[\"registry.terraform.io/hashicorp/google\"]"
+                "[root] module.gcr.google_artifact_registry_repository.registry" -> "[root] module.gcr.google_artifact_registry_repository.registry (expand)"
+                "[root] module.gcr.google_artifact_registry_repository.registry" -> "[root] module.gcr.google_project_service.api[\"artifactregistry.googleapis.com\"]"
+                "[root] module.gcr.google_artifact_registry_repository.registry" -> "[root] module.gcr.local.registry_hostname (expand)"
+                "[root] module.gcr.google_project_service.api (expand)" -> "[root] module.gcr (expand)"
+                "[root] module.gcr.google_project_service.api (expand)" -> "[root] provider[\"registry.terraform.io/hashicorp/google\"]"
+                "[root] module.gcr.google_project_service.api[\"artifactregistry.googleapis.com\"]" -> "[root] module.gcr.google_project_service.api (expand)"
+                "[root] module.gcr.google_project_service.api[\"artifactregistry.googleapis.com\"]" -> "[root] module.gcr.var.project_name (expand)"
+                "[root] module.gcr.local.registry_hostname (expand)" -> "[root] module.gcr.var.location (expand)"
+                "[root] module.gcr.var.location (expand)" -> "[root] module.gcr (expand)"
+                "[root] module.gcr.var.project_name (expand)" -> "[root] module.gcr (expand)"
+                "[root] module.gcr.var.project_name (expand)" -> "[root] var.project_name"
+                "[root] provider[\"registry.terraform.io/hashicorp/google\"] (close)" -> "[root] module.gcr.google_artifact_registry_repository.registry"
+                "[root] provider[\"registry.terraform.io/hashicorp/google\"]" -> "[root] var.project_name"
+                "[root] provider[\"registry.terraform.io/hashicorp/google\"]" -> "[root] var.region"
+                "[root] root" -> "[root] provider[\"registry.terraform.io/hashicorp/google\"] (close)"
+        }
+    }
+    ```
    
 9. Reach YARN UI ✅
    
