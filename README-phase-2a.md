@@ -24,12 +24,12 @@ Worth to read:
 
 3. Sync your repo with https://github.com/bdg-tbd/tbd-workshop-1. ✅
 
-4. Provision your infrastructure. 🔄
+4. Provision your infrastructure. ✅
 
-    a) setup Vertex AI Workbench `pyspark` kernel as described in point [8](https://github.com/Dove6/tbd-workshop-1/tree/master#project-setup) 
+    a) setup Vertex AI Workbench `pyspark` kernel as described in point [8](https://github.com/Dove6/tbd-workshop-1/tree/master#project-setup) ✅
 
     b) upload [tpc-di-setup.ipynb](https://github.com/Dove6/tbd-workshop-1/blob/master/notebooks/tpc-di-setup.ipynb) to 
-the running instance of your Vertex AI Workbench
+the running instance of your Vertex AI Workbench ✅
 
 5. In `tpc-di-setup.ipynb` modify cell under section ***Clone tbd-tpc-di repo***: ✅
 
@@ -48,11 +48,11 @@ the running instance of your Vertex AI Workbench
 
    c) update git clone command to point to ***your fork***. ✅
 
-6. Access Vertex AI Workbench and run cell by cell notebook `tpc-di-setup.ipynb`. 🔄
+6. Access Vertex AI Workbench and run cell by cell notebook `tpc-di-setup.ipynb`. ✅
 
-    a) in the first cell of the notebook replace: `%env DATA_BUCKET=tbd-2023z-9910-data` with your data bucket. 🔄
+    a) in the first cell of the notebook replace: `%env DATA_BUCKET=tbd-2023z-9910-data` with your data bucket. ✅
 
-    b) in the cell: 🔄
+    b) in the cell: ✅
          ```%%bash
          mkdir -p git && cd git
          git clone https://github.com/mwiewior/tbd-tpc-di.git
@@ -61,9 +61,9 @@ the running instance of your Vertex AI Workbench
          ```
       replace repo with your fork. Next checkout to 'notebook' branch.
    
-    c) after running first cells your fork of `tbd-tpc-di` repository will be cloned into Vertex AI  enviroment (see git folder). 🔄
+    c) after running first cells your fork of `tbd-tpc-di` repository will be cloned into Vertex AI  enviroment (see git folder). ✅
 
-    d) take a look on `git/tbd-tpc-di/profiles.yaml`. This file includes Spark parameters that can be changed if you need to increase the number of executors and 🔄
+    d) take a look on `git/tbd-tpc-di/profiles.yaml`. This file includes Spark parameters that can be changed if you need to increase the number of executors and ✅
         ```
          server_side_parameters:
              "spark.driver.memory": "2g"
@@ -73,23 +73,43 @@ the running instance of your Vertex AI Workbench
         ```
 
 
-7. Explore files created by generator and describe them, including format, content, total size. 🔄
+7. Explore files created by generator and describe them, including format, content, total size. ✅
 
-   ***Files desccription***
+   The generator outputs files representing data from a fictional On-Line Transaction Processing system in the form of three batches: historical load and two incremental updates.
 
-8. Analyze tpcdi.py. What happened in the loading stage? 🔄
+   **Format**:
+   - the data:
+     - mainly CSV files without a header,
+       - with `,` as a delimiter (.csv files),
+       - with `|` as a delimiter (.txt files),
+       - fixed-width lines (files without an extension),
+     - a single XML file without a schema,
+   - audit data: CSV files with `,` as a delimiter,
+   - generation metadata:
+     - a TXT file summarizing the number of generated records (digen_report.txt),
+     - BatchDate.txt (one in each of Batch1, Batch2, Batch3 dirs) with the date when the batch was created.
+
+   **Content**: retail brokerage data including
+   - data from a financial newswire split into multiple FINWIRE files (for each quarter) in Batch1,
+   - customer and account information (including prospective customers).
+
+   **Total size**:  
+   - 9.6 GiB,
+   - 162228471 rows (160873381 in Batch1, 677582 in Batch2, 677508 in Batch3).
+
+9. Analyze tpcdi.py. What happened in the loading stage? 🔄
 
    ***Your answer***
 
-9. Using SparkSQL answer: how many table were created in each layer? 🔄
+10. Using SparkSQL answer: how many table were created in each layer? 🔄
 
    ***SparkSQL command and output***
 
-10. Add some 3 more [dbt tests](https://docs.getdbt.com/docs/build/tests) and explain what you are testing. ***Add new tests to your repository.*** 🔄
+11. Add some 3 more [dbt tests](https://docs.getdbt.com/docs/build/tests) and explain what you are testing. ***Add new tests to your repository.*** 🔄
 
     ***Code and description of your tests***
 
-11. In main.tf update 🔄
+12. In main.tf update 🔄
    ```
    dbt_git_repo            = "https://github.com/mwiewior/tbd-tpc-di.git"
    dbt_git_repo_branch     = "main"
