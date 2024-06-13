@@ -183,6 +183,7 @@ the running instance of your Vertex AI Workbench ✅
     ```
     so dbt_git_repo points to your fork of tbd-tpc-di. 
 
-12. Redeploy infrastructure and check if the DAG finished with no errors:
+12. Redeploy infrastructure and check if the DAG finished with no errors: ✅
 
-***The screenshot of Apache Aiflow UI***
+    There are no new errors after re-deploying the infrastructure:  
+    ![image](https://github.com/Dove6/tbd-workshop-1/assets/24943032/61e8b7fd-f3f8-47d2-9ecb-eee0abef62bf)
