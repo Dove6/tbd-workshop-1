@@ -176,7 +176,7 @@ the running instance of your Vertex AI Workbench ✅
     The results of running the tests:  
     ![image](https://github.com/Dove6/tbd-workshop-1/assets/24943032/43aa67e7-80a1-4d3d-9f83-ac75cd2c49cb)
 
-11. In main.tf update 🔄
+11. In main.tf update ✅
     ```
     dbt_git_repo            = "https://github.com/mwiewior/tbd-tpc-di.git"
     dbt_git_repo_branch     = "main"
