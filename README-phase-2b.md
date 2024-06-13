@@ -30,12 +30,17 @@
 5. Analyze the performance and scalability of execution times of each model. Visualize and discucss the final results. ✅
 
    Total execution time (in minutes):  
-   ![Total dbt run execution time]()
+   ![all](https://github.com/Dove6/tbd-workshop-1/assets/24943032/5837040a-3bf7-4db3-bde2-5bda5a8433bf)
+
+   Execution time per layer:  
+   ![per_layer](https://github.com/Dove6/tbd-workshop-1/assets/24943032/c12fea7d-a05a-4f5e-8aa7-cae6cfd48d95)
 
    Execution time per model (in seconds, logarithmic scale):  
-   ![dbt run execution time per model, bronze layer]()  
-   ![dbt run execution time per model, silver layer]()  
-   ![dbt run execution time per model, gold layer]()
+   ![bronze](https://github.com/Dove6/tbd-workshop-1/assets/24943032/321f5920-f119-42ba-a310-5ad76302c3d4)  
+   ![silver](https://github.com/Dove6/tbd-workshop-1/assets/24943032/dcd5cf3d-91cf-410c-908f-347e70f165a9)  
+   ![gold](https://github.com/Dove6/tbd-workshop-1/assets/24943032/be64d680-f3bd-4ef6-b518-93ea98d45045)
+
+
 
    The benchmark shows that the best number of executors for the task is 2.  
    It seems the task does not scale well, quickly hitting the point where increasing the number of processing nodes no longer decreases the processing time:
