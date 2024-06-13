@@ -103,17 +103,18 @@ the running instance of your Vertex AI Workbench ✅
    The data is first saved in GCS buckets, then loaded as Spark Dataframes from that bucket.  
    At last, the dataframes are either displayed or written to a table, controlled by one of the script parameters.
     
-   Two kinds of files are loaded: FINWIRE and everything else.  
-   FINWIRE files are spread between many files, so they are gathered using `glob`.  
-   They all use the same file format, all lines are constant width.  
-   `rec_type` column dictates the schema of each record, there are 3 kinds: CMP, SEC, FIN.
+   Two kinds of files are loaded: FINWIRE (financial newswire) and everything else.  
+   The financial newswire is split into many files, so they are all gathered using `glob`.  
+   They use the same file format with all lines being of constant width.  
+   `rec_type` column dictates the schema of each record. There are 3 record types: CMP, SEC, and FIN.
     
    Other files are processed one by one, each using a different loading method depending on their format.  
    CSV and TXT files are processed as CSV and need to be augmented with a schema for the data.  
-   The XML file is processed differently, the schema is not provided and we use a `select` to get only a subset of available data.
+   The XML file is processed differently, the schema is not provided and we use SQL-like `select` to get only a subset of available data.
 
 9. Using SparkSQL answer: how many table were created in each layer? ✅
 
+   The script:
    ```python
    print(f'layer       | table count')
    dbs = spark.sql('show databases').collect()
@@ -160,8 +161,6 @@ the running instance of your Vertex AI Workbench ✅
     from {{ ref('fact_watches') }} 
     where sk_date_removed < sk_date_placed
     ```
-
-    sprawdzenie czy daty są w dobrej relacji
 
     A test for ensuring every company has a CEO:
     ```sql
